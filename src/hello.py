@@ -3,22 +3,28 @@ import os
 from datetime import timedelta
 from datetime import date
 
-def nippo_today(name="today"):
-    print(name)
-    # print('日報かけよ {0}'.format(name))
-    # vim.command("echo 'Nippo!!!!!!!!!!!!!!!'")
-    today = date.today()
-    day = str(today.day)
-    month = str(today.month)
-    year = str(today.year)
-    home_dir = os.environ['HOME']
-    work_dir = os.path.join(home_dir, "workspace", "plugin")
-    nippo_dir = os.path.join(work_dir, year, month, day)
-    os.system("mkdir -p {}".format(nippo_dir))
-    print(nippo_dir)
+nippo_home_directory =  vim.eval("g:nippo#directory")
 
-def past_date(days):
+def nippo_today(name="today"):
+    day_suffix = "日"
+    month_suffix = "月"
+    year_suffix = "年"
+    today = date.today()
+    day = str(today.day) + day_suffix
+    month = str(today.month) + month_suffix
+    year = str(today.year) + year_suffix
+    nippo_file = day + ".md"
+    nippo_dir = os.path.join(nippo_home_directory, year, month)
+    nippo_path = os.path.join(nippo_dir, nippo_file)
+
+    os.makedirs(nippo_dir, exist_ok=True)
+    nippo_call_vim_command("silent", "e", nippo_path)
+
+def nippo_past_date(days):
     return datetime.date.today() - datetime.timedelta(days=days)
+
+def nippo_call_vim_command(*commands):
+    vim.command(":" + " ".join(commands))
 
 # その日の日報を作成して表示
 # 昨日のやつを指定して見る
@@ -28,3 +34,5 @@ def past_date(days):
 
 # 型付け不可
 # os.mkdirs
+# xrange 
+
