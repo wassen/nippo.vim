@@ -1,14 +1,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-py3f <sfile>:h:h/src/hello.py
+py3f <sfile>:h:h/src/nippo.py
 py3 import vim
 
-function! nippo#today(...)
+function! nippo#open_nippo(...)
   if a:0 == 0
-    py3  nippo_today()
+    py3  open_nippo()
   else 
-    py3 nippo_today(vim.eval('a:1'))
+    py3 open_nippo(vim.eval('a:1'))
   end
 endfunction
 
