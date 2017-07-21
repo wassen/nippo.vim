@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-py3f <sfile>:h:h/src/nippo.py
+execute "py3f " . g:nippo#runtime_path . "/src/nippo.py"
 py3 import vim
 
 function! nippo#open_nippo(...)

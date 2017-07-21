@@ -5,7 +5,8 @@ import traceback
 from datetime import timedelta
 from datetime import date
 
-sys.path.append(os.getcwd())
+nippo_runtime_path = vim.eval("g:nippo#runtime_path")
+sys.path.append(nippo_runtime_path)
 from config import jp as config
 
 nippo_home_directory = vim.eval("g:nippo#directory")

@@ -1,7 +1,9 @@
-if exists("g:loaded_hello")
+if exists("g:nippo#loaded")
   finish
 endif
-let g:loaded_hello = 1
+let g:nippo#loaded = 1
+
+let g:nippo#runtime_path = expand("<sfile>:h:h")
 
 let s:save_cpo = &cpo
 set cpo&vim
