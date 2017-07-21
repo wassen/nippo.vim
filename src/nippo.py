@@ -52,9 +52,8 @@ def open_nippo(period="today"):
     if not os.path.isfile(nippo_path):
             vim.current.buffer[0] = nippo_title()
 
-
 def extract_vim_error(error):
-    return [line for line in error.split('\n') if line.startswith("vim.error:")][0]
+    return [line for line in error.split('\n') if line.startswith("vim.error:") ][0].replace("vim.error: Vim(edit):", "")
 
 def past_date(days):
     return date.today() - timedelta(days=days)
