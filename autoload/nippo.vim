@@ -4,11 +4,11 @@ set cpo&vim
 execute "py3f " . g:nippo#runtime_path . "/src/nippo.py"
 py3 import vim
 
-function! nippo#open_nippo(...)
+function! nippo#open(...)
   if a:0 == 0
-    py3  open_nippo()
+    py3  Nippo().open()
   else 
-    py3 open_nippo(vim.eval('a:1'))
+    py3 Nippo(vim.eval('a:1')).open()
   end
 endfunction
 
