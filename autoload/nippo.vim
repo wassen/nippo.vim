@@ -1,14 +1,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-execute "py3f " . g:nippo#runtime_path . "/src/nippo.py"
+execute "py3f " . g:nippo#runtime_path . "/src/entry_point.py"
 py3 import vim
 
-function! nippo#open_nippo(...)
+function! nippo#main(...)
   if a:0 == 0
-    py3  open_nippo()
+    py3 nippo_main()
   else 
-    py3 open_nippo(vim.eval('a:1'))
+    py3 nippo_main(vim.eval('a:1'))
   end
 endfunction
 
