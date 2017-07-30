@@ -8,8 +8,8 @@ year_suffix = "年"
 nippo_open_error_message = "日報ファイルのオープンに失敗しました。"
 try:
     try:
-        nippo_home_directory = vim.eval("g:nippo#directory")
+        nippo_home_directory = os.path.join(vim.eval("g:nippo#directory"), "nippo")
     except vim.error:
-        nippo_home_directory = os.path.join(os.environ["HOME"], "Documents", "日報")
+        nippo_home_directory = os.path.join(os.environ["HOME"], "Documents", "nippo")
 except NameError:
-    nippo_home_directory = os.path.join(os.environ["HOME"], "Documents", "日報")
+    nippo_home_directory = os.path.join(os.environ["HOME"], "Documents", "nippo")
