@@ -49,10 +49,7 @@ def nippo_add_task():
     tasks_file = join(config.nippo_home_directory, "tasks")
     tasks = Tasks.load(tasks_file)
 
-    d = date.today()
-    title = vim.current.buffer[0]
-    contents = [line for line in vim.current.buffer if line.startswith("- [ ] ")]
-    task_list = [Task(d, title, content) for content in contents]
+    task_list = Task.task_list_from(vim.current.buffer)
 
     tasks.extend(task_list)
     tasks.save()

@@ -15,6 +15,9 @@ except NameError:
 sys.path.append(nippo_runtime_path)
 from config import jp as config
 
+def indices(value, it):
+    return [i for i, e in enumerate(it) if e == value]
+
 def call_vim_command(*commands):
     vim.command(":" + " ".join(commands))
 
@@ -64,9 +67,48 @@ class Nippo(TaskOfFile):
         self.nippo_title              = f"# {year}{month}{day}"
         self.nippo_path               = os.path.join(nippo_dir, nippo_name)
 
+
+
 class Task:
+
     @staticmethod
-    def task_list_from(lines):
+    def __child_tasks_index_list(parent_task_index_list):
+        return [indices(i, parent_task_index_list) for i, x in enumerate(parent_task_index_list)]
+
+    @staticmethod
+    def parent_task_index_list(task_depth_list):
+        parent_task_index_list = []
+        for i, task_depth in enumerate(task_depth_list):
+            is_shallower_task_list = [task_depth > other_task_depth for other_task_depth in task_depth_list[:i]]
+            parent_task_index = [j for j, is_deeper_task in enumerate(is_shallower_task_list) if is_deeper_task][-1:]
+            if not len(parent_task_index) == 0:
+                parent_task_index_list.append(parent_task_index[0])
+            else:
+                parent_task_index_list.append(None)
+        return parent_task_index_list
+
+    @staticmethod
+    # 黒魔術になってしまった。
+    # 引数の個数をじゆうにいじりたい
+    def aaa(itera1, itera2, task_depth_list, child_tasks_index_list, func):
+
+        def bbb(current_depth):
+            if current_depth < 0:
+                return res
+            else:
+                for i in indices(current_depth, task_depth_list):
+                    j = child_tasks_index_list[i]
+                    res[i] = func(itera1[i], itera2[i], child_tasks=[res[k] for k in j])
+                return bbb(current_depth - 1)
+        # max_argument
+        # len(itera2?)
+        # zipして、てきとうにunpackすればええんでは？
+
+        res = [None] * len(itera1)
+        return bbb(max(task_depth_list))
+
+    @classmethod
+    def task_list_from(cls, lines):
         def task_reg(line):
             # starting, 0 or more blacks, "- [", blank or x "] "
             return re.search("^\s*-\s\[[x\s]\]\s", line)
@@ -96,22 +138,19 @@ class Task:
         task_depth_list = [task_depth(line) for line in lines if task_reg(line) is not None]
         task_completed_list = [task_completed(line) for line in lines if task_reg(line) is not None]
 
-        parent_task_index_list = []
-        for i, task_depth in enumerate(task_depth_list):
-            is_shallower_task_list = [task_depth > other_task_depth for other_task_depth in task_depth_list[:i]]
-            parent_task_index = [j for j, is_deeper_task in enumerate(is_shallower_task_list) if is_deeper_task][-1:]
-            if not len(parent_task_index) == 0:
-                parent_task_index_list.append(parent_task_index[0])
-            else:
-                parent_task_index_list.append(None)
+        parent_task_index_list = cls.parent_task_index_list(task_depth_list)
+        child_tasks_index_list = cls.__child_tasks_index_list(parent_task_index_list)
 
         # XXX give Parent Task as constractor?
-        tasks = [Task(content, completed) for content, completed in zip(task_content_list, task_completed_list)]
-        for task, parent_task_index in zip(tasks, parent_task_index_list):
-            if parent_task_index is not None:
-                task.parent_task = tasks[parent_task_index]
+        # tasks = [Task(content, completed) for content, completed in zip(task_content_list, task_completed_list)]
+        # for task, parent_task_index in zip(tasks, parent_task_index_list):
+        #     if parent_task_index is not None:
+        #         task.parent_task = tasks[parent_task_index]
 
-        return tasks
+        res = cls.aaa(task_content_list, task_completed_list, task_depth_list, child_tasks_index_list, Task)
+        #import pdb; pdb.set_trace()
+
+        return res
 
     # taskオブジェクトがやることか？
     # 0行目ないときはえらーだぞ
@@ -123,11 +162,18 @@ class Task:
         return [line for line in self.lines if line.startswith("- [ ] ")][0]
 
     def __init__(self, content, completed, **kwargs):
-        self.parent_task = kwargs.get("parent_task", None)
+        self.child_tasks = kwargs.get("child_tasks", None)
         # self.date    = date
         self.content = content
         self.completed = completed
 
+    def __eq__(self, other):
+        if other is None or not type(self) == type(other):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 class Vim():
     @staticmethod
     def is_new_buffer():
@@ -135,8 +181,7 @@ class Vim():
 
 class Tasks(Vim):
     def append(self, task):
-        tasks_same_day = [self_task for self_task in self.tasks if self_task.date == task.date]
-        if all([not task_same_day.content == task.content for task_same_day in tasks_same_day]):
+        if all([not self_task == task for self_task in self.tasks]):
             self.tasks.append(task)
 
     def extend(self, task_list):
@@ -146,9 +191,9 @@ class Tasks(Vim):
     def open(self):
         try:
             call_vim_command("silent", "e", os.devnull)
-            if self.__class__.is_new_buffer():
-                vim.current.buffer.append([task.content for task in self.tasks])
-                del vim.current.buffer[0]
+            del vim.current.buffer[:]
+            vim.current.buffer.append([task.content for task in self.tasks])
+            del vim.current.buffer[0]
 
         except vim.error:
             sys.stderr.write(extract_vim_error(traceback.format_exc()))
