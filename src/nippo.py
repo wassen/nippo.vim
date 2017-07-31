@@ -2,6 +2,7 @@
 import vim
 import os
 import sys
+import re
 import pickle
 import traceback
 from datetime import timedelta as after
@@ -36,7 +37,6 @@ class NippoFile(TaskOfFile):
 class Nippo(TaskOfFile):
 
     @staticmethod
-
     def exists_nippo(self):
         return os.path.isfile(self.nippo_path)
 
@@ -65,6 +65,53 @@ class Nippo(TaskOfFile):
         self.nippo_path               = os.path.join(nippo_dir, nippo_name)
 
 class Task:
+    @staticmethod
+    def task_list_from(lines):
+        def task_reg(line):
+            # starting, 0 or more blacks, "- [", blank or x "] "
+            return re.search("^\s*-\s\[[x\s]\]\s", line)
+
+        def task_depth(line):
+            r = task_reg(line)
+            if r is None:
+                return None
+            const = 6
+            depth = r.end() - const
+            return depth
+
+        def task_content(line):
+            r = task_reg(line)
+            if r is None:
+                return None
+            # strip - [ ]
+            content = line.lstrip(r.group())
+            return content
+
+        def task_completed(line):
+            r = task_reg(line)
+            if r is None:
+                return false
+            return "x" in r.group()
+        task_content_list = [task_content(line) for line in lines if task_reg(line) is not None]
+        task_depth_list = [task_depth(line) for line in lines if task_reg(line) is not None]
+        task_completed_list = [task_completed(line) for line in lines if task_reg(line) is not None]
+
+        parent_task_index_list = []
+        for i, task_depth in enumerate(task_depth_list):
+            is_shallower_task_list = [task_depth > other_task_depth for other_task_depth in task_depth_list[:i]]
+            parent_task_index = [j for j, is_deeper_task in enumerate(is_shallower_task_list) if is_deeper_task][-1:]
+            if not len(parent_task_index) == 0:
+                parent_task_index_list.append(parent_task_index[0])
+            else:
+                parent_task_index_list.append(None)
+
+        # XXX give Parent Task as constractor?
+        tasks = [Task(content, completed) for content, completed in zip(task_content_list, task_completed_list)]
+        for task, parent_task_index in zip(tasks, parent_task_index_list):
+            if parent_task_index is not None:
+                task.parent_task = tasks[parent_task_index]
+
+        return tasks
 
     # taskオブジェクトがやることか？
     # 0行目ないときはえらーだぞ
@@ -75,10 +122,11 @@ class Task:
     def tasks(self):
         return [line for line in self.lines if line.startswith("- [ ] ")][0]
 
-    def __init__(self, date, title, content):
-        self.date    = date
-        self.title   = title
+    def __init__(self, content, completed, **kwargs):
+        self.parent_task = kwargs.get("parent_task", None)
+        # self.date    = date
         self.content = content
+        self.completed = completed
 
 class Vim():
     @staticmethod
