@@ -80,11 +80,14 @@ class Task:
         self.title   = title
         self.content = content
 
-class Tasks:
+class Vim():
+    @staticmethod
+    def is_new_buffer():
+        return len(vim.current.buffer) == 1 and vim.current.buffer[0] == ""
+
+class Tasks(Vim):
     def append(self, task):
         tasks_same_day = [self_task for self_task in self.tasks if self_task.date == task.date]
-        print(tasks_same_day)
-        print(task.content)
         if all([not task_same_day.content == task.content for task_same_day in tasks_same_day]):
             self.tasks.append(task)
 
@@ -95,8 +98,9 @@ class Tasks:
     def open(self):
         try:
             call_vim_command("silent", "e", os.devnull)
-            vim.current.buffer.append([task.content for task in self.tasks])
-            del vim.current.buffer[0]
+            if self.__class__.is_new_buffer():
+                vim.current.buffer.append([task.content for task in self.tasks])
+                del vim.current.buffer[0]
 
         except vim.error:
             sys.stderr.write(extract_vim_error(traceback.format_exc()))
