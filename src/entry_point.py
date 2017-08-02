@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+import vim
 import os
 from os.path import join
 import sys
@@ -7,10 +8,7 @@ import pickle
 from datetime import timedelta
 from datetime import date
 
-try:
-    nippo_runtime_path = vim.eval("g:nippo#runtime_path")
-except NameError:
-    nippo_runtime_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+nippo_runtime_path = vim.eval("g:nippo#runtime_path")
 sys.path.append(nippo_runtime_path)
 from config import jp as config
 from src.nippo import Nippo, Tasks, Task
@@ -59,6 +57,12 @@ def nippo_add_task():
 
 def nippo_update_tasks():
 
+    # file access every changing text in vim
+#    tasks_file = join(config.nippo_home_directory, "tasks")
+#    tasks = Tasks.load(tasks_file)
+
+    # if not tasks.tasks. == tasks:
+
     tasks = Tasks()
     task_list = Task.task_list_from(vim.current.buffer)
     tasks.extend(task_list)
@@ -66,4 +70,3 @@ def nippo_update_tasks():
 
 def nippo_show_tasks():
     pass
-

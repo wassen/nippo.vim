@@ -1,15 +1,14 @@
 # -*- coding:utf-8 -*-
-import os
-import sys
 import vim
+import os
 day_suffix = "日"
 month_suffix = "月"
 year_suffix = "年"
 nippo_open_error_message = "日報ファイルのオープンに失敗しました。"
-try:
-    try:
-        nippo_home_directory = os.path.join(vim.eval("g:nippo#directory"), "nippo")
-    except vim.error:
-        nippo_home_directory = os.path.join(os.environ["HOME"], "Documents", "nippo")
-except NameError:
-    nippo_home_directory = os.path.join(os.environ["HOME"], "Documents", "nippo")
+
+vim_nippo_home_directory = "g:nippo#directory"
+
+if vim_nippo_home_directory in vim.vars:
+    nippo_directory = os.path.join(vim.eval("g:nippo#home_directory"), "nippo")
+else:
+    nippo_directory = os.path.join(os.environ["HOME"], "Documents", "nippo")

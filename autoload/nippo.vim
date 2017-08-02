@@ -1,8 +1,8 @@
+" :help use-cpo-save
 let s:save_cpo = &cpo
 set cpo&vim
 
 execute "py3f " . g:nippo#runtime_path . "/src/entry_point.py"
-py3 import vim
 
 function! nippo#main(...)
   if a:0 == 0
