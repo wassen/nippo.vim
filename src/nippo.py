@@ -70,6 +70,8 @@ class Nippo(TaskOfFile):
 
 
 class Task:
+    not_comp_str = "- [ ] "
+    comp_str = "- [x] "
 
     @staticmethod
     def __child_tasks_index_list(parent_task_index_list):
@@ -197,9 +199,9 @@ class Tasks(Vim):
 
     def open(self):
         try:
-            call_vim_command("silent", "e", tasks_file)
+            call_vim_command("silent", "e", self.__class__.tasks_file)
             del vim.current.buffer[:]
-            vim.current.buffer.append([task.content for task in self.tasks])
+            vim.current.buffer.append([Task.not_comp_str + task.content for task in self.tasks])
             del vim.current.buffer[0]
 
         except vim.error:

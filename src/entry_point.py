@@ -57,6 +57,13 @@ def nippo_add_task():
     # with open(join(config.nippo_home_directory, "tasks"), "bw") as f:
     #     pickle.dump(tasks, f)
 
+def nippo_update_tasks():
+
+    tasks = Tasks()
+    task_list = Task.task_list_from(vim.current.buffer)
+    tasks.extend(task_list)
+    tasks.save()
+
 def nippo_show_tasks():
     pass
 

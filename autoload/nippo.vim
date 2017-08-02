@@ -20,5 +20,9 @@ function! nippo#add_task()
   py3 nippo_add_task()
 endfunction
 
+function! nippo#update_tasks()
+  py3 nippo_update_tasks()
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
