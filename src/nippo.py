@@ -185,6 +185,8 @@ class Vim():
         return len(vim.current.buffer) == 1 and vim.current.buffer[0] == ""
 
 class Tasks(Vim):
+    tasks_file = os.path.join(config.nippo_home_directory, ".tasks.nptsk")
+
     def append(self, task):
         if all([not self_task == task for self_task in self.tasks]):
             self.tasks.append(task)
@@ -195,7 +197,7 @@ class Tasks(Vim):
 
     def open(self):
         try:
-            call_vim_command("silent", "e", os.devnull)
+            call_vim_command("silent", "e", tasks_file)
             del vim.current.buffer[:]
             vim.current.buffer.append([task.content for task in self.tasks])
             del vim.current.buffer[0]
