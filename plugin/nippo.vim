@@ -16,6 +16,6 @@ command! -nargs=0 TaskAdd call nippo#add_task(<f-args>)
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-autocmd BufWritePre * call nippo#add_task()
+autocmd BufWritePre */nippo/*/*.md call nippo#add_task()
 " nippoで固定する、Python側で判断する
 " */nippo/*/*.md

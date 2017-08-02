@@ -105,7 +105,12 @@ class Task:
         # zipして、てきとうにunpackすればええんでは？
 
         res = [None] * len(itera1)
-        return bbb(max(task_depth_list))
+        # オブジェクトにするか？
+        if not len(task_depth_list) == 0:
+            max_depth = max(task_depth_list)
+            return bbb(max_depth)
+        else:
+            return []
 
     @classmethod
     def task_list_from(cls, lines):
