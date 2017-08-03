@@ -8,9 +8,7 @@ nippo_open_error_message = "日報ファイルのオープンに失敗しまし�
 
 vim_nippo_home_directory = "nippo#directory"
 
-nippo_home_directory = vim.vars.get(
-    vim_nippo_home_directory,
-    os.path.join(os.environ["HOME"], "Documents")
-)
-
-nippo_directory = os.path.join(nippo_home_directory, "nippo")
+if vim_nippo_home_directory in vim.vars:
+    nippo_directory = os.path.join(vim.eval(vim_nippo_home_directory), "nippo")
+else:
+    nippo_directory = os.path.join(os.environ["HOME"], "Documents", "nippo")

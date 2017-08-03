@@ -3,10 +3,6 @@
 # this is mock module
 import os
 
-vars = {
-        "nippo#home_directory": os.path.join(os.environ["HOME"], "Documents", "nippo"),
-        "nippo#runtime_path"  : os.path.abspath(os.path.dirname(__file__))
-        }
 
 def eval(string):
     if string == "g:nippo#runtime_path":
