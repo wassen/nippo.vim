@@ -17,7 +17,6 @@ unlet s:save_cpo
 
 augroup nippo_plugin
   autocmd!
-  autocmd BufWritePre */nippo/*/*.md call nippo#add_task()
-  " nippoで固定する、Python側で判断する
+  autocmd BufWritePre *.md call nippo#add_task()
   autocmd TextChanged *.nptsk call nippo#update_tasks()
 augroup END

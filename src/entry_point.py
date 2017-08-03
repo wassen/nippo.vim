@@ -43,6 +43,12 @@ def nippo_tasks():
     tasks()
 
 def nippo_add_task():
+    def is_path_inside_directory(path, directory):
+        return os.path.realpath(path).startswith(os.path.realpath(directory))
+
+    file_name = vim.current.buffer.name
+    if not is_path_inside_directory(file_name, config.nippo_directory):
+        return
 
     tasks_file = join(config.nippo_directory, "tasks")
     tasks = Tasks.load(tasks_file)
