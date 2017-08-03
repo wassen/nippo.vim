@@ -62,7 +62,7 @@ class Nippo(TaskOfFile):
         self.day         = day        = f"{nippo_date.day}{config.day_suffix}"
         self.month       = month      = f"{nippo_date.month}{config.month_suffix}"
         self.year        = year       = f"{nippo_date.year}{config.year_suffix}"
-        self.nippo_dir   = nippo_dir  = os.path.join(config.nippo_home_directory, year, month)
+        self.nippo_dir   = nippo_dir  = os.path.join(config.nippo_directory, year, month)
         nippo_name                    = f"{day}.md"
         self.nippo_title              = f"# {year}{month}{day}"
         self.nippo_path               = os.path.join(nippo_dir, nippo_name)
@@ -187,7 +187,7 @@ class Vim():
         return len(vim.current.buffer) == 1 and vim.current.buffer[0] == ""
 
 class Tasks(Vim):
-    tasks_file = os.path.join(config.nippo_home_directory, ".tasks.nptsk")
+    tasks_file = os.path.join(config.nippo_directory, ".tasks.nptsk")
 
     def append(self, task):
         if all([not self_task == task for self_task in self.tasks]):
@@ -218,7 +218,7 @@ class Tasks(Vim):
     @staticmethod
     def load(tasks_path=None):
 
-        tasks_path = os.path.join(config.nippo_home_directory, "tasks")
+        tasks_path = os.path.join(config.nippo_directory, "tasks")
         if os.path.isfile(tasks_path):
             with open(tasks_path, "br") as f:
                 return pickle.load(f)
@@ -227,7 +227,7 @@ class Tasks(Vim):
 
     def __init__(self, **kwargs):
         self.tasks = kwargs.get("tasks", [])
-        self.tasks_path = kwargs.get("tasks_path", os.path.join(config.nippo_home_directory, "tasks"))
+        self.tasks_path = kwargs.get("tasks_path", os.path.join(config.nippo_directory, "tasks"))
 
 
 
@@ -239,7 +239,7 @@ class Tasks(Vim):
 #     def __init__(self, tasks_path):
 #         self.tasks_path = tasks_path
 #         nippo_files = [NippoFile(os.path.join(root, file_))
-#                 for root, _, files in os.walk(config.nippo_home_directory)
+#                 for root, _, files in os.walk(config.nippo_directory)
 #                     for file_ in files if ".md"
 #                         in file_ and not file_.startswith(".")]
 #

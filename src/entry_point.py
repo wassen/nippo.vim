@@ -17,7 +17,7 @@ def nippo_main(arg="today"):
 
     # Nippo tasks done this weekとか
     def tasks():
-        Tasks(join(config.nippo_home_directory, "tasks")).open()
+        Tasks(join(config.nippo_directory, "tasks")).open()
 
     def nippo(date):
         Nippo(date).open()
@@ -44,7 +44,7 @@ def nippo_tasks():
 
 def nippo_add_task():
 
-    tasks_file = join(config.nippo_home_directory, "tasks")
+    tasks_file = join(config.nippo_directory, "tasks")
     tasks = Tasks.load(tasks_file)
 
     task_list = Task.task_list_from(vim.current.buffer)
@@ -52,13 +52,13 @@ def nippo_add_task():
     tasks.extend(task_list)
     tasks.save()
 
-    # with open(join(config.nippo_home_directory, "tasks"), "bw") as f:
+    # with open(join(config.nippo_directory, "tasks"), "bw") as f:
     #     pickle.dump(tasks, f)
 
 def nippo_update_tasks():
 
     # file access every changing text in vim
-#    tasks_file = join(config.nippo_home_directory, "tasks")
+#    tasks_file = join(config.nippo_directory, "tasks")
 #    tasks = Tasks.load(tasks_file)
 
     # if not tasks.tasks. == tasks:
