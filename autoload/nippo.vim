@@ -8,7 +8,7 @@ function! nippo#main(...)
   if a:0 == 0
     py3 nippo_main()
   else 
-    py3 nippo_main(vim.eval('a:1'))
+    py3 nippo_main(vim.eval("a:1"))
   end
 endfunction
 

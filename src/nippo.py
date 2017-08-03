@@ -5,8 +5,6 @@ import sys
 import re
 import pickle
 import traceback
-from datetime import timedelta as after
-from datetime import date
 
 vim_nippo_runtime_path = "nippo#runtime_path"
 
@@ -18,14 +16,18 @@ nippo_runtime_path = vim.vars.get(
 sys.path.append(nippo_runtime_path)
 from config import jp as config
 
+
 def indices(value, it):
     return [i for i, e in enumerate(it) if e == value]
+
 
 def call_vim_command(*commands):
     vim.command(":" + " ".join(commands))
 
+
 def extract_vim_error(error):
     return [line for line in error.split('\n') if line.startswith("vim.error:") ][0].replace("vim.error: Vim(edit):", "")
+
 
 class TaskOfFile:
     def tasks(self):
@@ -35,10 +37,12 @@ class TaskOfFile:
         with open(self.nippo_path) as nippo_file:
             return nippo_file.readlines()
 
+
 class NippoFile(TaskOfFile):
     def __init__(self, nippo_path):
         # nippo以外にディレクトリにフォルダなりがあるとバグるよ
         self.nippo_path = nippo_path
+
 
 class Nippo(TaskOfFile):
 
@@ -69,7 +73,6 @@ class Nippo(TaskOfFile):
         nippo_name                    = f"{day}.md"
         self.nippo_title              = f"# {year}{month}{day}"
         self.nippo_path               = os.path.join(nippo_dir, nippo_name)
-
 
 
 class Task:
@@ -142,7 +145,7 @@ class Task:
         def task_completed(line):
             r = task_reg(line)
             if r is None:
-                return false
+                return False
             return "x" in r.group()
         task_content_list = [task_content(line) for line in lines if task_reg(line) is not None]
         task_depth_list = [task_depth(line) for line in lines if task_reg(line) is not None]
@@ -158,7 +161,7 @@ class Task:
         #         task.parent_task = tasks[parent_task_index]
 
         res = cls.aaa(task_content_list, task_completed_list, task_depth_list, child_tasks_index_list, Task)
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
 
         return res
 
@@ -184,10 +187,13 @@ class Task:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+
 class Vim():
     @staticmethod
     def is_new_buffer():
         return len(vim.current.buffer) == 1 and vim.current.buffer[0] == ""
+
 
 class Tasks(Vim):
     tasks_file = os.path.join(config.nippo_directory, ".tasks.nptsk")
@@ -232,12 +238,6 @@ class Tasks(Vim):
         self.tasks = kwargs.get("tasks", [])
         self.tasks_path = kwargs.get("tasks_path", os.path.join(config.nippo_directory, "tasks"))
 
-
-
-
-
-
-
 # class Tasks:
 #     def __init__(self, tasks_path):
 #         self.tasks_path = tasks_path
@@ -253,15 +253,14 @@ class Tasks(Vim):
 #                 nippo_tasks.append("title\n")
 #             for task in nippo_file.tasks():
 #                 nippo_tasks.append(task)
-# 
+#
 #         with open(tasks_path, 'w') as f:
 #             f.writelines(nippo_tasks)
-# 
+#
 
     # def pre_write(self):
     #     call_vim_command
-    #         self.previous_buffer = 
-
+    #         self.previous_buffer =
 
 
 # その日の日報を作成して表示
@@ -281,7 +280,7 @@ class Tasks(Vim):
 
 # 型付け不可
 # os.mkdirs
-# xrange 
+# xrange
 # import できないんかいfrom src import
 
 # wをフックしてオブジェクトに書き込む

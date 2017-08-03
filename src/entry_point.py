@@ -4,7 +4,6 @@ import vim
 import os
 from os.path import join
 import sys
-import pickle
 from datetime import timedelta
 from datetime import date
 
@@ -12,6 +11,7 @@ nippo_runtime_path = vim.eval("g:nippo#runtime_path")
 sys.path.append(nippo_runtime_path)
 from config import jp as config
 from src.nippo import Nippo, Tasks, Task
+
 
 def nippo_main(arg="today"):
 
@@ -34,6 +34,7 @@ def nippo_main(arg="today"):
         except ValueError:
             print("invarid argument")
 
+
 def nippo_tasks():
 
     # Nippo tasks done this weekとか
@@ -41,6 +42,7 @@ def nippo_tasks():
         Tasks.load().open()
 
     tasks()
+
 
 def nippo_add_task():
     def is_path_inside_directory(path, directory):
@@ -61,11 +63,12 @@ def nippo_add_task():
     # with open(join(config.nippo_directory, "tasks"), "bw") as f:
     #     pickle.dump(tasks, f)
 
+
 def nippo_update_tasks():
 
     # file access every changing text in vim
-#    tasks_file = join(config.nippo_directory, "tasks")
-#    tasks = Tasks.load(tasks_file)
+    # tasks_file = join(config.nippo_directory, "tasks")
+    # tasks = Tasks.load(tasks_file)
 
     # if not tasks.tasks. == tasks:
 
