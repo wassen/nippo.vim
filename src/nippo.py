@@ -8,10 +8,13 @@ import traceback
 from datetime import timedelta as after
 from datetime import date
 
-try:
-    nippo_runtime_path = vim.eval("g:nippo#runtime_path")
-except NameError:
-    nippo_runtime_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+vim_nippo_runtime_path = "nippo#runtime_path"
+
+nippo_runtime_path = vim.vars.get(
+    vim_nippo_runtime_path,
+    os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+)
+
 sys.path.append(nippo_runtime_path)
 from config import jp as config
 
