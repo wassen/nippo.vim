@@ -73,8 +73,8 @@ class Nippo(TaskOfFile):
 
 
 class Task:
-    not_comp_str = "- [ ] "
-    comp_str = "- [x] "
+    PREFIX_NOT_COMPLETED = "- [ ] "
+    PREFIX_COMPLETED     = "- [x] "
 
     @staticmethod
     def __child_tasks_index_list(parent_task_index_list):
@@ -172,10 +172,11 @@ class Task:
         return [line for line in self.lines if line.startswith("- [ ] ")][0]
 
     def __init__(self, content, completed, **kwargs):
-        self.child_tasks = kwargs.get("child_tasks", None)
-        # self.date    = date
-        self.content = content
-        self.completed = completed
+        self.child_tasks      = kwargs.get("child_tasks", None)
+        # self.date           = date
+        self.content          = content
+        self.completed        = completed
+        self.prefix_completed = self.__class__.PREFIX_COMPLETED if completed else self.__class__.PREFIX_NOT_COMPLETED
 
     def __eq__(self, other):
         if other is None or not type(self) == type(other):
@@ -207,7 +208,7 @@ class Tasks(Vim):
         try:
             call_vim_command("silent", "e", self.__class__.tasks_file)
             del vim.current.buffer[:]
-            vim.current.buffer.append([Task.not_comp_str + task.content for task in self.tasks])
+            vim.current.buffer.append([task.prefix_completed + task.content for task in self.tasks])
             del vim.current.buffer[0]
 
         except vim.error:
