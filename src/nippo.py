@@ -14,16 +14,16 @@ sys.path.append(nippo_runtime_path)
 from config import jp as config
 
 
-def indices(value, it):
-    return [i for i, e in enumerate(it) if e == value]
-
-
 def call_vim_command(*commands):
     vim.command(":" + " ".join(commands))
 
 
+def indices(value, it):
+    return [i for i, e in enumerate(it) if e == value]
+
+
 def extract_vim_error(error):
-    return [line for line in error.split('\n') if line.startswith("vim.error:") ][0].replace("vim.error: Vim(edit):", "")
+    return [line for line in error.split('\n') if line.startswith("vim.error:")][0].replace("vim.error: Vim(edit):", "")
 
 
 class TaskOfFile:
