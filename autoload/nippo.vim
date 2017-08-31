@@ -20,6 +20,10 @@ function! nippo#add_task()
   py3 nippo_add_task()
 endfunction
 
+function! nippo#reload_all_tasks()
+  py3 nippo_reload_all_tasks()
+endfunction
+
 function! nippo#update_tasks()
   py3 nippo_update_tasks()
 endfunction

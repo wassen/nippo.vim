@@ -11,6 +11,7 @@ set cpo&vim
 
 command! -nargs=? Nippo call nippo#main(<f-args>)
 command! -nargs=0 NippoTasks call nippo#tasks(<f-args>)
+command! -nargs=0 NippoReloadAllTasks call nippo#reload_all_tasks(<f-args>)
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

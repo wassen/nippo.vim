@@ -69,5 +69,24 @@ def nippo_update_tasks():
     tasks.extend(task_list)
     tasks.save()
 
+
+def nippo_reload_all_tasks():
+    tasks = Tasks()
+    nippos = []
+    print(config.nippo_directory)
+    for root, dirs, files in os.walk(config.nippo_directory):
+        for f in files:
+            if os.path.splitext(os.path.join(root, f))[1] == ".md":
+                nippos.append(os.path.join(root, f))
+    print(nippos)
+    for nippo in nippos:
+        with open(nippo, "r") as f:
+            task_list = Task.task_list_from(f.read().splitlines())
+            tasks.extend(task_list)
+    print(tasks.tasks)
+    tasks.save()
+    pass
+
+
 def nippo_show_tasks():
     pass
