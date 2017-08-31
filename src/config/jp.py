@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import vim
 import os
+name = "浅山"
 day_suffix = "日"
 month_suffix = "月"
 year_suffix = "年"
