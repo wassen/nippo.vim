@@ -54,7 +54,7 @@ class Nippo:
             sys.stderr.write(extract_vim_error(traceback.format_exc()))
             return
 
-        if Vim.is_new_buffer:
+        if Vim.is_new_buffer():
             lines = [self.title]
             lines.append("")
             lines.extend(self.templete_for_office)
