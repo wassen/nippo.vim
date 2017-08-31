@@ -18,5 +18,6 @@ unlet s:save_cpo
 augroup nippo_plugin
   autocmd!
   autocmd BufWritePre *.md call nippo#add_task()
-  autocmd TextChanged *.nptsk call nippo#update_tasks()
+  "autocmd TextChanged *.nptsk call nippo#update_tasks()
+  autocmd BufWritePre *.nptsk call nippo#update_tasks()
 augroup END
